@@ -6,7 +6,12 @@
 #include "src\ViewFrustumSceneObject.h"
 #include "src\terrain\MyTerrain.h"
 #include "src\MyCameraManager.h"
+#include "src\Plane.h"
 
+#include "src\MyMesh.h"
+
+#define STB_IMAGE_IMPLEMENTATION
+#include "../../Externals/Include/stb_image.h"
 
 #pragma comment (lib, "lib-vc2015\\glfw3.lib")
 #pragma comment(lib, "assimp-vc141-mt.lib")
@@ -40,6 +45,7 @@ ShaderProgram* defaultShaderProgram = new ShaderProgram();
 
 ViewFrustumSceneObject* m_viewFrustumSO = nullptr;
 MyTerrain* m_terrain = nullptr;
+std::unique_ptr<Plane> my_plane;
 INANOA::MyCameraManager* m_myCameraManager = nullptr;
 // ==============================================
 
@@ -182,6 +188,10 @@ bool initializeGL(){
 	m_terrain = new MyTerrain();
 	m_terrain->init(-1); 
 	defaultRenderer->appendTerrainSceneObject(m_terrain->sceneObject());
+
+    // initialize plane
+    my_plane = std::make_unique<Plane>();
+    defaultRenderer->appendDynamicSceneObject(my_plane->sceneObject());
 	// =================================================================	
 	
 	resize(FRAME_WIDTH, FRAME_HEIGHT);
@@ -216,6 +226,7 @@ void paintGL(){
 	const glm::mat4 godProjMat = m_myCameraManager->godProjectionMatrix();
 
 	const glm::mat4 airplaneModelMat = m_myCameraManager->airplaneModelMatrix();
+    my_plane->sceneObject()->setModelMat(airplaneModelMat);
 
 	// (x, y, w, h)
 	const glm::ivec4 playerViewport = m_myCameraManager->playerViewport();

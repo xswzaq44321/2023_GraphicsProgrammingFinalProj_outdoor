@@ -34,12 +34,21 @@ void pureColor(){
 	fragColor = withFog(vec4(1.0, 0.0, 0.0, 1.0)) ;
 }
 
+void planePass(){
+	vec4 texel = texture(albedoTexture, f_uv.xy) ;
+	fragColor = withFog(texel); 
+	fragColor.a = 1.0;	
+}
+
 void main(){	
 	if(pixelProcessId == 5){
 		pureColor() ;
 	}
 	else if(pixelProcessId == 7){
 		terrainPass() ;
+	}
+	else if(pixelProcessId == 9){
+		planePass();
 	}
 	else{
 		pureColor() ;

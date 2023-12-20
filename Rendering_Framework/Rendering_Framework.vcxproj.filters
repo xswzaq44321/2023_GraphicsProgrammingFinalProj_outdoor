@@ -90,6 +90,12 @@
     <ClCompile Include="src\MyCameraManager.cpp">
       <Filter>Source Files\camera</Filter>
     </ClCompile>
+    <ClCompile Include="src\MyMesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Plane.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\externals\include\imgui\imconfig.h">
@@ -160,6 +166,12 @@
     </ClInclude>
     <ClInclude Include="src\camera\MyOrbitControl.h">
       <Filter>Header Files\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MyMesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Plane.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

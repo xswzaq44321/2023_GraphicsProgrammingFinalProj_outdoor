@@ -4,8 +4,12 @@
 #include <glm/gtc/type_ptr.hpp>
 #include "SceneManager.h"
 
+#include <optional>
+
 class DynamicSceneObject 
 {
+public:
+    static GLuint createTexture(const void *data, const int numComp, const int width, const int height, const GLint internalFormat, const GLenum imageFormat, const GLenum type, const GLint wrapMode, const GLint minMagFilter);
 
 private:
 	GLuint m_indexBufferHandle;
@@ -17,6 +21,8 @@ private:
 	GLenum m_primitive;
 	int m_pixelFunctionId;
 	int m_indexCount;
+    std::optional<GLuint> my_albedoMapHandle;
+    std::optional<GLuint> my_normalMapHandle;
 
 	glm::mat4 m_modelMat;
 
@@ -35,5 +41,7 @@ public:
 	void setPixelFunctionId(const int functionId);
 	void setPrimitive(const GLenum primitive);
 	void setModelMat(const glm::mat4& modelMat);
+    void setAlbedoTex(GLuint albedoHandle);
+    void setNormalTex(GLuint normalHandle);
 };
 
