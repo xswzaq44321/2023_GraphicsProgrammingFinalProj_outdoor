@@ -30,6 +30,10 @@ void SceneRenderer::renderPass(){
 			obj->update();
 		}
 	}
+
+    if (this->my_indirectSO != nullptr) {
+        this->my_indirectSO->render();
+    }
 	
 }
 
@@ -67,6 +71,10 @@ void SceneRenderer::appendDynamicSceneObject(DynamicSceneObject *obj){
 void SceneRenderer::appendTerrainSceneObject(TerrainSceneObject* tSO) {
 	this->m_terrainSO = tSO;
 }
+void SceneRenderer::appendIndirectSceneObject(MyIndirectRenderer * obj)
+{
+    this->my_indirectSO = obj;
+}
 void SceneRenderer::clear(const glm::vec4 &clearColor, const float depth){
 	static const float COLOR[] = { 0.0, 0.0, 0.0, 1.0 };
 	static const float DEPTH[] = { 1.0 };
@@ -88,12 +96,18 @@ bool SceneRenderer::setUpShader(){
 	manager->m_vertexHandle = 0;
 	manager->m_normalHandle = 1;
 	manager->m_uvHandle = 2;
+    manager->my_offsetHandle = 3;
+    manager->my_rotationHandle = 4;
 
 	// =================================
 	manager->m_modelMatHandle = 0;
 	manager->m_viewMatHandle = 7;
 	manager->m_projMatHandle = 8;
 	manager->m_terrainVToUVMatHandle = 9;
+
+    // compute shader attributes
+    manager->my_maxInsLocation = 1;
+    // =================================
 
 	manager->m_albedoMapHandle = 4;
 	manager->m_albedoMapTexIdx = 0;
@@ -106,20 +120,27 @@ bool SceneRenderer::setUpShader(){
 	manager->m_normalMapHandle = 6;
 	manager->m_normalMapTexIdx = 2;
 	glUniform1i(manager->m_normalMapHandle, manager->m_normalMapTexIdx);
+
+    manager->m_albedoMapHandle = 10;
+    manager->m_albedoMapTexIdx = 4;
+    glUniform1i(manager->m_albedoMapHandle, manager->m_albedoMapTexIdx);
 	
 	manager->m_albedoTexUnit = GL_TEXTURE0;
 	manager->m_elevationTexUnit = GL_TEXTURE3;
 	manager->m_normalTexUnit = GL_TEXTURE2;
+    manager->my_albedoTexArrUnit = GL_TEXTURE4;
 
 	manager->m_vs_vertexProcessIdHandle = 1;
 	manager->m_vs_commonProcess = 0;
 	manager->m_vs_terrainProcess = 3;
+    manager->my_vs_offsetProcess = 4;
 
 	manager->m_fs_pixelProcessIdHandle = 2;
 	manager->m_fs_pureColor = 5;
 	manager->m_fs_terrainPass = 7;
-    manager->my_fs_planePass = 9;
+    manager->my_fs_texturePass = 9;
     manager->my_fs_stonePass = 10;
+    manager->my_fs_texArrPass = 11;
 	
 	return true;
 }

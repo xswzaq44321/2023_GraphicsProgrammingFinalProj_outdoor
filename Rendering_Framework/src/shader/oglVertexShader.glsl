@@ -3,6 +3,8 @@
 layout(location=0) in vec3 v_vertex;
 layout(location=1) in vec3 v_normal ;
 layout(location=2) in vec3 v_uv ;
+layout(location=3) in vec3 v_offset;
+layout(location=4) in mat4 v_rotation;
 
 out vec3 f_viewVertex ;
 out vec3 f_uv ;
@@ -52,12 +54,34 @@ void terrainProcess(){
 	gl_Position = projMat * viewVertex ;
 }
 
+void offsetProcess(){
+// 	mat4 rot = mat4(1.0000000,  0.0000000,  0.0000000, 0.0,
+//    0.0000000,  0.5000000, -0.8660254, 0.0,
+//    0.0000000,  0.8660254,  0.5000000, 0.0,
+//    0.0, 0.0, 0.0, 1.0
+//    );
+	vec3 rotatedVer = (v_rotation * vec4(v_vertex, 1.0)).xyz;
+	vec4 worldVertex = modelMat * vec4(rotatedVer + v_offset, 1.0);
+	vec4 worldNormal = modelMat * v_rotation * vec4(v_normal, 0.0) ;
+
+	vec4 viewVertex = viewMat * worldVertex ;
+	vec4 viewNormal = viewMat * worldNormal ;
+	
+	f_viewVertex = viewVertex.xyz;
+	f_uv = v_uv ;
+
+	gl_Position = projMat * viewVertex ;
+}
+
 void main(){
 	if(vertexProcessIdx == 0){
 		commonProcess() ;
 	}
 	else if(vertexProcessIdx == 3){
 		terrainProcess() ;
+	}
+	else if(vertexProcessIdx == 4){
+		offsetProcess();
 	}
 	else{
 		commonProcess() ;

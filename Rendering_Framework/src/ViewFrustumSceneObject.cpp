@@ -50,7 +50,7 @@ ViewFrustumSceneObject::ViewFrustumSceneObject(const int numCascade, const GLuin
 	this->m_dynamicSO->updateIndexBuffer(0, MAX_NUM_INDEX * 4);
 	
 	this->m_dynamicSO->setPrimitive(GL_LINES);
-	this->m_dynamicSO->setPixelFunctionId(SceneManager::Instance()->m_fs_pureColor);		
+	this->m_dynamicSO->setPixelFunctionId(SceneManager::Instance()->m_fs_pureColor);
 }
 
 

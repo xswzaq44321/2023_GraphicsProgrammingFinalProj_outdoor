@@ -20,6 +20,10 @@ public:
 		// load poisson samples
 		int numPoissonSample = -1;
 		std::ifstream ppInput(fileFullpath, std::ios::binary);
+        if(!ppInput){
+            fprintf(stderr, "file %s not found!!\n", fileFullpath.c_str());
+            return nullptr;
+        }
 		ppInput.read((char*)(&numPoissonSample), sizeof(int));
 		float* poissonSamples = new float[numPoissonSample * 3];
 		ppInput.read((char*)(poissonSamples), sizeof(float) * 3 * numPoissonSample);

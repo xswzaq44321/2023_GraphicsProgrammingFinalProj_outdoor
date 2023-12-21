@@ -99,6 +99,7 @@ void DynamicSceneObject::update() {
     // model matrix
     glUniformMatrix4fv(SceneManager::Instance()->m_modelMatHandle, 1, false, glm::value_ptr(this->m_modelMat));
 
+    glUniform1i(SceneManager::Instance()->m_vs_vertexProcessIdHandle, this->m_vertexFunctionId);
     glUniform1i(SceneManager::Instance()->m_fs_pixelProcessIdHandle, this->m_pixelFunctionId);
     glDrawElements(this->m_primitive, this->m_indexCount, GL_UNSIGNED_INT, nullptr);
 }

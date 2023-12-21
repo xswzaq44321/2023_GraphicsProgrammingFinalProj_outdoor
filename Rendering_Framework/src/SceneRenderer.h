@@ -5,6 +5,7 @@
 #include "SceneManager.h"
 #include "DynamicSceneObject.h"
 #include "terrain\TerrainSceneObject.h"
+#include "MyIndirectRenderer.h"
 
 
 class SceneRenderer
@@ -22,6 +23,7 @@ private:
 
 	std::vector<DynamicSceneObject*> m_dynamicSOs;
 	TerrainSceneObject* m_terrainSO = nullptr;
+    MyIndirectRenderer* my_indirectSO = nullptr;
 
 
 public:
@@ -33,6 +35,7 @@ public:
 	void setViewport(const int x, const int y, const int w, const int h);
 	void appendDynamicSceneObject(DynamicSceneObject *obj);
 	void appendTerrainSceneObject(TerrainSceneObject* tSO);
+    void appendIndirectSceneObject(MyIndirectRenderer* obj);
 
 // pipeline
 public:

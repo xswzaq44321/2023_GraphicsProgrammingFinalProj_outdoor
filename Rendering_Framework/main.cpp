@@ -48,6 +48,7 @@ ViewFrustumSceneObject* m_viewFrustumSO = nullptr;
 MyTerrain* m_terrain = nullptr;
 std::unique_ptr<Plane> my_plane;
 std::unique_ptr<MagicRock> my_rock;
+std::unique_ptr<MyIndirectRenderer> my_Indirect;
 INANOA::MyCameraManager* m_myCameraManager = nullptr;
 // ==============================================
 
@@ -206,6 +207,10 @@ bool initializeGL(){
     // initialize Magic Rock
     my_rock = std::make_unique<MagicRock>();
     defaultRenderer->appendDynamicSceneObject(my_rock->sceneObject());
+
+    // initialize Indirect
+    my_Indirect = std::make_unique<MyIndirectRenderer>();
+    defaultRenderer->appendIndirectSceneObject(my_Indirect.get());
 	// =================================================================	
 	
 	resize(FRAME_WIDTH, FRAME_HEIGHT);

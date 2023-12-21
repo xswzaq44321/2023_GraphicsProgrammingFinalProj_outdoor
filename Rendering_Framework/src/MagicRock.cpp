@@ -39,6 +39,7 @@ MagicRock::MagicRock() {
     my_dynamicSO->setModelMat(glm::translate(glm::mat4(1.0f), glm::vec3(25.92f, 18.27f, 11.75f)));
 
     my_dynamicSO->setPrimitive(GL_TRIANGLES);
+    my_dynamicSO->setVertexFunctionId(SceneManager::Instance()->m_vs_commonProcess);
     my_dynamicSO->setPixelFunctionId(SceneManager::Instance()->my_fs_stonePass);
 }
 

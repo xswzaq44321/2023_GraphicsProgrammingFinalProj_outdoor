@@ -35,7 +35,8 @@ Plane::Plane()
     my_dynamicSO->setAlbedoTex(albedoTexHandle);
 
     my_dynamicSO->setPrimitive(GL_TRIANGLES);
-    my_dynamicSO->setPixelFunctionId(SceneManager::Instance()->my_fs_planePass);
+    my_dynamicSO->setVertexFunctionId(SceneManager::Instance()->m_vs_commonProcess);
+    my_dynamicSO->setPixelFunctionId(SceneManager::Instance()->my_fs_texturePass);
 }
 
 DynamicSceneObject * Plane::sceneObject() const

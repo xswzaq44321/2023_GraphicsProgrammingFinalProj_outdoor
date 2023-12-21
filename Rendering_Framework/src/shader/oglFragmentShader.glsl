@@ -8,6 +8,7 @@ layout (location = 0) out vec4 fragColor ;
 layout(location = 2) uniform int pixelProcessId;
 layout(location = 4) uniform sampler2D albedoTexture ;
 layout(location = 6) uniform sampler2D normalMap ;
+layout(location = 10) uniform sampler2DArray albedoTextureArray;
 
 
 vec4 withFog(vec4 color){
@@ -35,7 +36,7 @@ void pureColor(){
 	fragColor = withFog(vec4(1.0, 0.0, 0.0, 1.0)) ;
 }
 
-void planePass(){
+void texturePass(){
 	vec4 texel = texture(albedoTexture, f_uv.xy) ;
 	fragColor = withFog(texel); 
 	fragColor.a = 1.0;	
@@ -48,6 +49,12 @@ void stonePass(){
 	fragColor.a = 1.0;	
 }
 
+void texArrPass(){
+	vec4 texel = texture(albedoTextureArray, f_uv);
+	fragColor = withFog(texel); 
+	fragColor.a = 1.0;	
+}
+
 void main(){	
 	if(pixelProcessId == 5){
 		pureColor() ;
@@ -56,10 +63,13 @@ void main(){
 		terrainPass() ;
 	}
 	else if(pixelProcessId == 9){
-		planePass();
+		texturePass();
 	}
 	else if(pixelProcessId == 10){
 		stonePass();
+	}
+	else if(pixelProcessId == 11){
+		texArrPass();
 	}
 	else{
 		pureColor() ;
