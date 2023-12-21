@@ -55,5 +55,6 @@ public:
 	int m_fs_pureColor;	
 	int m_fs_terrainPass;
     int my_fs_planePass;
+    int my_fs_stonePass;
 };
 

@@ -7,6 +7,7 @@
 #include "src\terrain\MyTerrain.h"
 #include "src\MyCameraManager.h"
 #include "src\Plane.h"
+#include "src\MagicRock.h"
 
 #include "src\MyMesh.h"
 
@@ -46,6 +47,7 @@ ShaderProgram* defaultShaderProgram = new ShaderProgram();
 ViewFrustumSceneObject* m_viewFrustumSO = nullptr;
 MyTerrain* m_terrain = nullptr;
 std::unique_ptr<Plane> my_plane;
+std::unique_ptr<MagicRock> my_rock;
 INANOA::MyCameraManager* m_myCameraManager = nullptr;
 // ==============================================
 
@@ -192,6 +194,10 @@ bool initializeGL(){
     // initialize plane
     my_plane = std::make_unique<Plane>();
     defaultRenderer->appendDynamicSceneObject(my_plane->sceneObject());
+
+    // initialize Magic Rock
+    my_rock = std::make_unique<MagicRock>();
+    defaultRenderer->appendDynamicSceneObject(my_rock->sceneObject());
 	// =================================================================	
 	
 	resize(FRAME_WIDTH, FRAME_HEIGHT);

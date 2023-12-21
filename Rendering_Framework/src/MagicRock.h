@@ -4,10 +4,10 @@
 #include "DynamicSceneObject.h"
 #include "MyMesh.h"
 
-class Plane
+class MagicRock
 {
 public:
-    Plane();
+    MagicRock();
 
     DynamicSceneObject *sceneObject() const;
 private:

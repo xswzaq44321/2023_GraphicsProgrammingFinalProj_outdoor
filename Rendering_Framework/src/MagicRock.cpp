@@ -1,10 +1,7 @@
-#include "Plane.h"
+#include "MagicRock.h"
 
-#include "MyMesh.h"
-
-Plane::Plane()
-{
-    MyMesh mesh = ProxyLoad(3).MyLoadObj("assets/airplane.obj").at(0);
+MagicRock::MagicRock() {
+    MyMesh mesh = ProxyLoad(3).MyLoadObj("assets/MagicRock/magicRock.obj").at(0);
     int numVertex = mesh.positions.size() / 3;
     int strideV = 9;
     my_dynamicSO = std::make_unique<DynamicSceneObject>(numVertex, mesh.indices.size(), true, true);
@@ -34,11 +31,18 @@ Plane::Plane()
     GLuint albedoTexHandle = DynamicSceneObject::createTexture(diffuseTex->data.data(), 4, diffuseTex->width, diffuseTex->height, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, GL_CLAMP_TO_EDGE, GL_NEAREST);
     my_dynamicSO->setAlbedoTex(albedoTexHandle);
 
+    // normal map
+    const auto& normalTex = mesh.normalTexture.at(0);
+    GLuint normalTexHandle = DynamicSceneObject::createTexture(normalTex->data.data(), 4, normalTex->width, normalTex->height, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, GL_CLAMP_TO_EDGE, GL_NEAREST);
+    my_dynamicSO->setNormalTex(normalTexHandle);
+    
+    my_dynamicSO->setModelMat(glm::translate(glm::mat4(1.0f), glm::vec3(25.92f, 18.27f, 11.75f)));
+
     my_dynamicSO->setPrimitive(GL_TRIANGLES);
-    my_dynamicSO->setPixelFunctionId(SceneManager::Instance()->my_fs_planePass);
+    my_dynamicSO->setPixelFunctionId(SceneManager::Instance()->my_fs_stonePass);
 }
 
-DynamicSceneObject * Plane::sceneObject() const
+DynamicSceneObject * MagicRock::sceneObject() const
 {
     return my_dynamicSO.get();
 }

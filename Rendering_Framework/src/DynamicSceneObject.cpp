@@ -118,6 +118,10 @@ void DynamicSceneObject::updateIndexBuffer(const int byteOffset, const int dataB
 void DynamicSceneObject::setPixelFunctionId(const int functionId) {
     this->m_pixelFunctionId = functionId;
 }
+void DynamicSceneObject::setVertexFunctionId(const int functionId)
+{
+    this->m_vertexFunctionId = functionId;
+}
 void DynamicSceneObject::setPrimitive(const GLenum primitive) {
     this->m_primitive = primitive;
 }

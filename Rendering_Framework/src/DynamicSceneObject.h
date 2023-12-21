@@ -20,6 +20,7 @@ private:
 	GLuint m_dataBufferHandle;
 	GLenum m_primitive;
 	int m_pixelFunctionId;
+	int m_vertexFunctionId;
 	int m_indexCount;
     std::optional<GLuint> my_albedoMapHandle;
     std::optional<GLuint> my_normalMapHandle;
@@ -39,6 +40,7 @@ public:
 	void updateIndexBuffer(const int byteOffset, const int dataByte);
 
 	void setPixelFunctionId(const int functionId);
+	void setVertexFunctionId(const int functionId);
 	void setPrimitive(const GLenum primitive);
 	void setModelMat(const glm::mat4& modelMat);
     void setAlbedoTex(GLuint albedoHandle);

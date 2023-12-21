@@ -119,6 +119,7 @@ bool SceneRenderer::setUpShader(){
 	manager->m_fs_pureColor = 5;
 	manager->m_fs_terrainPass = 7;
     manager->my_fs_planePass = 9;
+    manager->my_fs_stonePass = 10;
 	
 	return true;
 }

@@ -80,7 +80,6 @@ MyMesh ProxyLoad::processMesh(const aiMesh * mesh, const aiScene * scene)
     if (mesh->mMaterialIndex >= 0) {
         const aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
         processMaterial(material, scene, aiTextureType_DIFFUSE, rtv.diffuseTexture);
-        processMaterial(material, scene, aiTextureType_SPECULAR, rtv.diffuseTexture);
         processMaterial(material, scene, aiTextureType_NORMALS, rtv.normalTexture);
     }
     return rtv;
