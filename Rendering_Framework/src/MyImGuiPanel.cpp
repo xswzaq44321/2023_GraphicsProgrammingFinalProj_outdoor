@@ -19,6 +19,12 @@ void MyImGuiPanel::update() {
 	ImGui::TextColored(ImVec4(0, 220, 0, 255), FPS_STR.c_str());
 	const std::string FT_STR = "Frame: " + std::to_string(this->m_avgFrameTime);
 	ImGui::TextColored(ImVec4(0, 220, 0, 255), FT_STR.c_str());
+    if (ImGui::Button("Teleport 0"))
+        Teleport[0] = true;
+    if (ImGui::Button("Teleport 1"))
+        Teleport[1] = true;
+    if (ImGui::Button("Teleport 2"))
+        Teleport[2] = true;
 }
 
 void MyImGuiPanel::setAvgFPS(const double avgFPS){

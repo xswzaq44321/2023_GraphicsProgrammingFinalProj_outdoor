@@ -64,4 +64,5 @@ void main(){
 	else{
 		pureColor() ;
 	}
+	fragColor.rgb = pow(fragColor.rgb, vec3(0.5));
 }

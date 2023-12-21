@@ -17,6 +17,8 @@ public:
 	void setAvgFPS(const double avgFPS);
 	void setAvgFrameTime(const double avgFrameTime);
 
+    bool Teleport[3] = {};
+
 private:
 	double m_avgFPS;
 	double m_avgFrameTime;

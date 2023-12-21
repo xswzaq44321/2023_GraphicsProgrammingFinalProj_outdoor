@@ -132,7 +132,15 @@ void vsyncDisabled(GLFWwindow *window) {
 			// reset
 			frameCount = 0;
 			previousTimeForFPS = currentTime;
-		}			
+		}
+
+        for (int i = 0; i < 3; ++i) {
+            if (m_imguiPanel->Teleport[i]) {
+                m_imguiPanel->Teleport[i] = false;
+                m_myCameraManager->teleport(i);
+                printf("Teleport %d\n", i);
+            }
+        }
 
 		glfwPollEvents();
 		paintGL();
