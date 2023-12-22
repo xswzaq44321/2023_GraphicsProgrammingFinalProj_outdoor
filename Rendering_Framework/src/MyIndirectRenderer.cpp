@@ -23,6 +23,13 @@ MyIndirectRenderer::MyIndirectRenderer()
         std::shared_ptr<MyPoissonSample>(MyPoissonSample::fromFile("assets/cityLots_sub_0.ppd2")), // buildingV2
         std::shared_ptr<MyPoissonSample>(MyPoissonSample::fromFile("assets/cityLots_sub_1.ppd2")),  // buildingV1
     };
+    glm::vec4 meshSphere[] = {
+        glm::vec4(0.0, 0.66, 0.0, 1.4),
+        glm::vec4(0.0, 2.55, 0.0, 3.4),
+        glm::vec4(0.0, 1.76, 0.0, 2.6),
+        glm::vec4(0.0, 4.57, 0.0, 8.5),
+        glm::vec4(0.0, 4.57, 0.0, 10.2),
+    };
     const int NUM_TEXTURE = meshes.size();
     const int IMG_WIDTH = 1024;
     const int IMG_HEIGHT = 1024;
@@ -54,7 +61,8 @@ MyIndirectRenderer::MyIndirectRenderer()
         indices.insert(indices.end(), mesh.indices.begin(), mesh.indices.end());
         texture.insert(texture.end(), mesh.diffuseTexture.at(0)->data.begin(), mesh.diffuseTexture.at(0)->data.end());
     }
-    for(const auto& samp : samples){
+    for (int a = 0; a < samples.size(); ++a) {
+        const auto& samp = samples[a];
         for (int i = 0; i < samp->m_numSample; ++i) {
             InstanceProperties temp;
             temp.position.x = samp->m_positions[i * 3 + 0];
@@ -64,6 +72,7 @@ MyIndirectRenderer::MyIndirectRenderer()
             glm::vec3 rad(samp->m_radians[i * 3 + 0], samp->m_radians[i * 3 + 1], samp->m_radians[i * 3 + 2]);
             glm::quat q = glm::quat(rad);
             temp.rotation = glm::toMat4(q);
+            temp.sphere = meshSphere[a];
             offsets.push_back(std::move(temp));
         }
         offsetCnt += samp->m_numSample;
@@ -202,11 +211,34 @@ void MyIndirectRenderer::resetRender()
     glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
 }
 
-void MyIndirectRenderer::cullRender(glm::mat4 viewProjMat)
+void MyIndirectRenderer::cullRender(glm::mat4 projMat, glm::mat4 viewMat, float aspect)
 {
+    const float fov = glm::radians(45.0f);
+    const float near = 0.1f, far = 700.0f;
+    float halfVSide = far * tanf(fov * 0.5f);
+    float halfHSide = halfVSide * aspect;
+    glm::vec3 forward = glm::vec3(0.0f, 0.0f, -1.0f);
+    glm::vec3 right = glm::vec3(-1.0f, 0.0f, 0.0f);
+    glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
+    glm::vec3 frontMultFar = far * forward;
+    glm::vec4 nearFace = glm::normalize(glm::vec4(-forward, 0.0f));
+    nearFace.w = near;
+    glm::vec4 farFace = glm::normalize(glm::vec4(forward, 0.0f));
+    farFace.w = far;
+    glm::vec4 rightFace = glm::normalize(glm::vec4(glm::cross(frontMultFar - right * halfHSide, up), 0.0f));
+    glm::vec4 leftFace = glm::normalize(glm::vec4(glm::cross(up, frontMultFar + right * halfHSide), 0.0f));
+    glm::vec4 topFace = glm::normalize(glm::vec4(glm::cross(right, frontMultFar - up * halfVSide), 0.0f));
+    glm::vec4 bottomFace = glm::normalize(glm::vec4(glm::cross(frontMultFar + up * halfVSide, right), 0.0f));
     glBindVertexArray(this->vao);
-    glUniformMatrix4fv(SceneManager::Instance()->my_viewProjMatLocation, 1, false, glm::value_ptr(viewProjMat));
+    glUniformMatrix4fv(SceneManager::Instance()->my_viewProjMatLocation, 1, false, glm::value_ptr(projMat * viewMat));
     glUniform1ui(SceneManager::Instance()->my_maxInsLocation, offsetCnt);
+    glUniformMatrix4fv(SceneManager::Instance()->my_viewMatLocation, 1, false, glm::value_ptr(viewMat));
+    glUniform4fv(SceneManager::Instance()->my_nearFaceLocation, 1, glm::value_ptr(nearFace));
+    glUniform4fv(SceneManager::Instance()->my_farFaceLocation, 1, glm::value_ptr(farFace));
+    glUniform4fv(SceneManager::Instance()->my_rightFaceLocation, 1, glm::value_ptr(rightFace));
+    glUniform4fv(SceneManager::Instance()->my_leftFaceLocation, 1, glm::value_ptr(leftFace));
+    glUniform4fv(SceneManager::Instance()->my_topFaceLocation, 1, glm::value_ptr(topFace));
+    glUniform4fv(SceneManager::Instance()->my_bottomFaceLocation, 1, glm::value_ptr(bottomFace));
     glDispatchCompute(offsetCnt / 1024 + 1, 1, 1);
     glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
 }

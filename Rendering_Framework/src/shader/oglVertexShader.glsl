@@ -19,6 +19,7 @@ layout(location = 1) uniform int vertexProcessIdx ;
 struct InstanceProperties {
     vec4 position;
     mat4 rotation;
+    vec4 sphere;
 };
 
 layout(std430, binding = 1) buffer InstanceData {

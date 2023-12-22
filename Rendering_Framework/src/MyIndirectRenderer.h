@@ -17,6 +17,7 @@ struct DrawElementsIndirectCommand {
 struct InstanceProperties {
     glm::vec4 position;
     glm::mat4 rotation;
+    glm::vec4 sphere;
 };
 
 class MyIndirectRenderer
@@ -34,7 +35,7 @@ public:
 
     void render();
     void resetRender();
-    void cullRender(glm::mat4 viewProjMat);
+    void cullRender(glm::mat4 projMat, glm::mat4 viewMat, float aspect);
 
 private:
     unsigned int vao;

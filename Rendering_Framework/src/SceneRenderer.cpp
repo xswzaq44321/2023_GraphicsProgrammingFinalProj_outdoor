@@ -21,7 +21,7 @@ void SceneRenderer::computeRenderPass()
 
     // compute shading
     this->m_computeshaderProgram->useProgram();
-    this->my_indirectSO->cullRender(this->m_projMat * this->m_viewMat);
+    this->my_indirectSO->cullRender(this->m_projMat, this->m_viewMat, this->m_frameWidth / 2.0 / this->m_frameHeight);
 }
 void SceneRenderer::renderPass(){
 	SceneManager *manager = SceneManager::Instance();	
@@ -122,6 +122,13 @@ bool SceneRenderer::setUpShader(){
     // compute shader attributes
     manager->my_viewProjMatLocation = 0;
     manager->my_maxInsLocation = 1;
+    manager->my_viewMatLocation = 2;
+    manager->my_nearFaceLocation = 3;
+    manager->my_farFaceLocation = 4;
+    manager->my_rightFaceLocation = 5;
+    manager->my_leftFaceLocation = 6;
+    manager->my_topFaceLocation = 7;
+    manager->my_bottomFaceLocation = 8;
 
     manager->my_instanceBind = 1;
     manager->my_validBind = 2;

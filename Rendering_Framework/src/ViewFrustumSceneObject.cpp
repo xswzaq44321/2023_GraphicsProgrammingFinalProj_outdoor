@@ -77,7 +77,9 @@ void ViewFrustumSceneObject::updateState(const glm::mat4 &viewMat, const glm::ve
 	glm::vec4 forward = -1.0f * glm::vec4(viewT[2].x, viewT[2].y, viewT[2].z, 0.0);
 	glm::vec4 x = -1.0f * glm::vec4(viewT[0].x, viewT[0].y, viewT[0].z, 0.0);
 	glm::vec4 y = glm::vec4(viewT[1].x, viewT[1].y, viewT[1].z, 0.0);
-
+    //printf("%f %f %f\n", forward.x, forward.y, forward.z);
+    //printf("%f %f %f\n", x.x, x.y, x.z);
+    //printf("%f %f %f\n\n", y.x, y.y, y.z);
 	glm::mat4 rMat;
 	rMat[0] = x;
 	rMat[1] = y;

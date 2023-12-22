@@ -36,6 +36,14 @@ public:
     // compute shader locations
     unsigned int my_viewProjMatLocation;
     unsigned int my_maxInsLocation;
+    unsigned int my_viewMatLocation;
+    unsigned int my_nearFaceLocation;
+    unsigned int my_farFaceLocation;
+    unsigned int my_rightFaceLocation;
+    unsigned int my_leftFaceLocation;
+    unsigned int my_topFaceLocation;
+    unsigned int my_bottomFaceLocation;
+
 
     unsigned int my_instanceBind;
     unsigned int my_validBind;
