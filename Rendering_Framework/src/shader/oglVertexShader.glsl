@@ -3,8 +3,7 @@
 layout(location=0) in vec3 v_vertex;
 layout(location=1) in vec3 v_normal ;
 layout(location=2) in vec3 v_uv ;
-layout(location=3) in vec3 v_offset;
-layout(location=4) in mat4 v_rotation;
+layout(location=3) in uint v_offsetIdx;
 
 out vec3 f_viewVertex ;
 out vec3 f_uv ;
@@ -16,6 +15,15 @@ layout(location = 7) uniform mat4 viewMat ;
 layout(location = 8) uniform mat4 projMat ;
 layout(location = 9) uniform mat4 terrainVToUVMat;
 layout(location = 1) uniform int vertexProcessIdx ;
+
+struct InstanceProperties {
+    vec4 position;
+    mat4 rotation;
+};
+
+layout(std430, binding = 1) buffer InstanceData {
+    InstanceProperties instanceProps[];
+};
 
 
 void commonProcess(){
@@ -55,9 +63,11 @@ void terrainProcess(){
 }
 
 void offsetProcess(){
-	vec3 rotatedVer = (v_rotation * vec4(v_vertex, 1.0)).xyz;
-	vec4 worldVertex = vec4(rotatedVer + v_offset, 1.0);
-	vec4 worldNormal = v_rotation * vec4(v_normal, 0.0) ;
+	vec3 offset = instanceProps[v_offsetIdx].position.xyz;
+	mat4 rotation = instanceProps[v_offsetIdx].rotation;
+	vec3 rotatedVertex = (rotation * vec4(v_vertex, 1.0)).xyz;
+	vec4 worldVertex = vec4(rotatedVertex + offset, 1.0);
+	vec4 worldNormal = rotation * vec4(v_normal, 0.0) ;
 
 	vec4 viewVertex = viewMat * worldVertex ;
 	vec4 viewNormal = viewMat * worldNormal ;

@@ -23,12 +23,12 @@ layout(std430, binding = 1) buffer InstanceData {
     InstanceProperties instanceProps[];
 };
 
-layout(std430, binding = 2) buffer CurrValidInstanceData {
-    InstanceProperties currValidInstanceProps[];
+layout(std430, binding = 2) buffer CurrValidInstanceIdx {
+    uint currValidInstanceIndices[];
 };
 
 layout(location = 0) uniform mat4 viewProjMat;
-layout(location = 1) uniform int numMaxInstance;
+layout(location = 1) uniform uint numMaxInstance;
 
 void main() {
     const uint idx = gl_GlobalInvocationID.x;
@@ -49,6 +49,6 @@ void main() {
                 break;
             }
         }
-        currValidInstanceProps[commands[cmdIdx].baseInstance + atomicAdd(commands[cmdIdx].instanceCount, 1)] = instanceProps[idx];
+        currValidInstanceIndices[commands[cmdIdx].baseInstance + atomicAdd(commands[cmdIdx].instanceCount, 1)] = idx;
     }
 }

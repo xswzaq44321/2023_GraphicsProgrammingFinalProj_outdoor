@@ -101,7 +101,7 @@ MyIndirectRenderer::MyIndirectRenderer()
     unsigned int visibleBufferHandle = 0;
     glGenBuffers(1, &visibleBufferHandle);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, visibleBufferHandle);
-    glBufferStorage(GL_SHADER_STORAGE_BUFFER, sizeof(InstanceProperties) * offsets.size(), offsets.data(), GL_MAP_READ_BIT);
+    glBufferStorage(GL_SHADER_STORAGE_BUFFER, sizeof(unsigned int) * offsets.size(), nullptr, GL_MAP_READ_BIT);
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, SceneManager::Instance()->my_validBind, visibleBufferHandle);
 
     unsigned int cmdBufferHandleSSBO;
@@ -144,23 +144,27 @@ MyIndirectRenderer::MyIndirectRenderer()
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 
-    glBindBuffer(GL_ARRAY_BUFFER, visibleBufferHandle);
     //glBindBuffer(GL_ARRAY_BUFFER, offsetHandle);
+    //glEnableVertexAttribArray(SceneManager::Instance()->my_offsetHandle);
+    //glVertexAttribDivisor(SceneManager::Instance()->my_offsetHandle, 1);
+    //glVertexAttribPointer(SceneManager::Instance()->my_offsetHandle, 3, GL_FLOAT, GL_FALSE, sizeof(InstanceProperties), 0);
+    //glEnableVertexAttribArray(SceneManager::Instance()->my_rotationHandle + 0);
+    //glEnableVertexAttribArray(SceneManager::Instance()->my_rotationHandle + 1);
+    //glEnableVertexAttribArray(SceneManager::Instance()->my_rotationHandle + 2);
+    //glEnableVertexAttribArray(SceneManager::Instance()->my_rotationHandle + 3);
+    //glVertexAttribDivisor(SceneManager::Instance()->my_rotationHandle + 0, 1);
+    //glVertexAttribDivisor(SceneManager::Instance()->my_rotationHandle + 1, 1);
+    //glVertexAttribDivisor(SceneManager::Instance()->my_rotationHandle + 2, 1);
+    //glVertexAttribDivisor(SceneManager::Instance()->my_rotationHandle + 3, 1);
+    //glVertexAttribPointer(SceneManager::Instance()->my_rotationHandle + 0, 4, GL_FLOAT, GL_FALSE, sizeof(InstanceProperties), (void*)(offsetof(InstanceProperties, rotation) + 0));
+    //glVertexAttribPointer(SceneManager::Instance()->my_rotationHandle + 1, 4, GL_FLOAT, GL_FALSE, sizeof(InstanceProperties), (void*)(offsetof(InstanceProperties, rotation) + 16));
+    //glVertexAttribPointer(SceneManager::Instance()->my_rotationHandle + 2, 4, GL_FLOAT, GL_FALSE, sizeof(InstanceProperties), (void*)(offsetof(InstanceProperties, rotation) + 32));
+    //glVertexAttribPointer(SceneManager::Instance()->my_rotationHandle + 3, 4, GL_FLOAT, GL_FALSE, sizeof(InstanceProperties), (void*)(offsetof(InstanceProperties, rotation) + 48));
+
+    glBindBuffer(GL_ARRAY_BUFFER, visibleBufferHandle);
     glEnableVertexAttribArray(SceneManager::Instance()->my_offsetHandle);
     glVertexAttribDivisor(SceneManager::Instance()->my_offsetHandle, 1);
-    glVertexAttribPointer(SceneManager::Instance()->my_offsetHandle, 3, GL_FLOAT, GL_FALSE, sizeof(InstanceProperties), 0);
-    glEnableVertexAttribArray(SceneManager::Instance()->my_rotationHandle + 0);
-    glEnableVertexAttribArray(SceneManager::Instance()->my_rotationHandle + 1);
-    glEnableVertexAttribArray(SceneManager::Instance()->my_rotationHandle + 2);
-    glEnableVertexAttribArray(SceneManager::Instance()->my_rotationHandle + 3);
-    glVertexAttribDivisor(SceneManager::Instance()->my_rotationHandle + 0, 1);
-    glVertexAttribDivisor(SceneManager::Instance()->my_rotationHandle + 1, 1);
-    glVertexAttribDivisor(SceneManager::Instance()->my_rotationHandle + 2, 1);
-    glVertexAttribDivisor(SceneManager::Instance()->my_rotationHandle + 3, 1);
-    glVertexAttribPointer(SceneManager::Instance()->my_rotationHandle + 0, 4, GL_FLOAT, GL_FALSE, sizeof(InstanceProperties), (void*)(offsetof(InstanceProperties, rotation) + 0));
-    glVertexAttribPointer(SceneManager::Instance()->my_rotationHandle + 1, 4, GL_FLOAT, GL_FALSE, sizeof(InstanceProperties), (void*)(offsetof(InstanceProperties, rotation) + 16));
-    glVertexAttribPointer(SceneManager::Instance()->my_rotationHandle + 2, 4, GL_FLOAT, GL_FALSE, sizeof(InstanceProperties), (void*)(offsetof(InstanceProperties, rotation) + 32));
-    glVertexAttribPointer(SceneManager::Instance()->my_rotationHandle + 3, 4, GL_FLOAT, GL_FALSE, sizeof(InstanceProperties), (void*)(offsetof(InstanceProperties, rotation) + 48));
+    glVertexAttribIPointer(SceneManager::Instance()->my_offsetHandle, 1, GL_UNSIGNED_INT, 0, 0);
 
     glBindBuffer(GL_DRAW_INDIRECT_BUFFER, cmdBufferHandleSSBO);
 
@@ -202,7 +206,7 @@ void MyIndirectRenderer::cullRender(glm::mat4 viewProjMat)
 {
     glBindVertexArray(this->vao);
     glUniformMatrix4fv(SceneManager::Instance()->my_viewProjMatLocation, 1, false, glm::value_ptr(viewProjMat));
-    glUniform1i(SceneManager::Instance()->my_maxInsLocation, offsetCnt);
+    glUniform1ui(SceneManager::Instance()->my_maxInsLocation, offsetCnt);
     glDispatchCompute(offsetCnt / 1024 + 1, 1, 1);
     glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
 }
