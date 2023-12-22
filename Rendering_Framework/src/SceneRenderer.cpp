@@ -13,9 +13,21 @@ void SceneRenderer::startNewFrame() {
 	this->m_shaderProgram->useProgram();
 	this->clear();
 }
+void SceneRenderer::computeRenderPass()
+{
+    // reset for compute shader
+    this->m_resetShaderProgram->useProgram();
+    this->my_indirectSO->resetRender();
+
+    // compute shading
+    this->m_computeshaderProgram->useProgram();
+    this->my_indirectSO->cullRender(this->m_projMat * this->m_viewMat);
+}
 void SceneRenderer::renderPass(){
 	SceneManager *manager = SceneManager::Instance();	
 
+    // render to screen
+    this->m_shaderProgram->useProgram();
 	glUniformMatrix4fv(manager->m_projMatHandle, 1, false, glm::value_ptr(this->m_projMat));
 	glUniformMatrix4fv(manager->m_viewMatHandle, 1, false, glm::value_ptr(this->m_viewMat));
 
@@ -42,8 +54,10 @@ void SceneRenderer::resize(const int w, const int h){
 	this->m_frameWidth = w;
 	this->m_frameHeight = h;
 }
-bool SceneRenderer::initialize(const int w, const int h, ShaderProgram* shaderProgram){
+bool SceneRenderer::initialize(const int w, const int h, ShaderProgram* shaderProgram, ShaderProgram* resetShaderProgram, ShaderProgram* computeShaderProgram){
 	this->m_shaderProgram = shaderProgram;
+    this->m_resetShaderProgram = resetShaderProgram;
+    this->m_computeshaderProgram = computeShaderProgram;
 
 	this->resize(w, h);
 	const bool flag = this->setUpShader();
@@ -106,7 +120,12 @@ bool SceneRenderer::setUpShader(){
 	manager->m_terrainVToUVMatHandle = 9;
 
     // compute shader attributes
+    manager->my_viewProjMatLocation = 0;
     manager->my_maxInsLocation = 1;
+
+    manager->my_instanceBind = 1;
+    manager->my_validBind = 2;
+    manager->my_drawCmdBind = 3;
     // =================================
 
 	manager->m_albedoMapHandle = 4;

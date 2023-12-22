@@ -34,7 +34,7 @@ public:
 
     void render();
     void resetRender();
-    void cullRender();
+    void cullRender(glm::mat4 viewProjMat);
 
 private:
     unsigned int vao;

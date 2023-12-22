@@ -51,6 +51,9 @@ void stonePass(){
 
 void texArrPass(){
 	vec4 texel = texture(albedoTextureArray, f_uv);
+	if(texel.a < 0.5){
+		discard;
+	}
 	fragColor = withFog(texel); 
 	fragColor.a = 1.0;	
 }

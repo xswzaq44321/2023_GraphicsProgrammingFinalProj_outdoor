@@ -96,19 +96,19 @@ MyIndirectRenderer::MyIndirectRenderer()
     glGenBuffers(1, &offsetHandle);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, offsetHandle);
     glBufferStorage(GL_SHADER_STORAGE_BUFFER, sizeof(InstanceProperties) * offsets.size(), offsets.data(), GL_MAP_READ_BIT);
-    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, offsetHandle);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, SceneManager::Instance()->my_instanceBind, offsetHandle);
 
     unsigned int visibleBufferHandle = 0;
     glGenBuffers(1, &visibleBufferHandle);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, visibleBufferHandle);
-    glBufferStorage(GL_SHADER_STORAGE_BUFFER, sizeof(glm::vec4) * offsets.size(), offsets.data(), GL_MAP_READ_BIT);
-    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, visibleBufferHandle);
+    glBufferStorage(GL_SHADER_STORAGE_BUFFER, sizeof(InstanceProperties) * offsets.size(), offsets.data(), GL_MAP_READ_BIT);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, SceneManager::Instance()->my_validBind, visibleBufferHandle);
 
     unsigned int cmdBufferHandleSSBO;
     glGenBuffers(1, &cmdBufferHandleSSBO);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, cmdBufferHandleSSBO);
     glBufferStorage(GL_SHADER_STORAGE_BUFFER, sizeof(DrawElementsIndirectCommand) * cmds.size(), cmds.data(), GL_MAP_READ_BIT);
-    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, cmdBufferHandleSSBO);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, SceneManager::Instance()->my_drawCmdBind, cmdBufferHandleSSBO);
     glBindBuffer(GL_DRAW_INDIRECT_BUFFER, cmdBufferHandleSSBO);
     glBufferData(GL_DRAW_INDIRECT_BUFFER, sizeof(DrawElementsIndirectCommand) * cmds.size(), cmds.data(), GL_DYNAMIC_DRAW);
 
@@ -144,8 +144,8 @@ MyIndirectRenderer::MyIndirectRenderer()
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 
-    //glBindBuffer(GL_ARRAY_BUFFER, visibleBufferHandle);
-    glBindBuffer(GL_ARRAY_BUFFER, offsetHandle);
+    glBindBuffer(GL_ARRAY_BUFFER, visibleBufferHandle);
+    //glBindBuffer(GL_ARRAY_BUFFER, offsetHandle);
     glEnableVertexAttribArray(SceneManager::Instance()->my_offsetHandle);
     glVertexAttribDivisor(SceneManager::Instance()->my_offsetHandle, 1);
     glVertexAttribPointer(SceneManager::Instance()->my_offsetHandle, 3, GL_FLOAT, GL_FALSE, sizeof(InstanceProperties), 0);
@@ -198,9 +198,10 @@ void MyIndirectRenderer::resetRender()
     glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
 }
 
-void MyIndirectRenderer::cullRender()
+void MyIndirectRenderer::cullRender(glm::mat4 viewProjMat)
 {
     glBindVertexArray(this->vao);
+    glUniformMatrix4fv(SceneManager::Instance()->my_viewProjMatLocation, 1, false, glm::value_ptr(viewProjMat));
     glUniform1i(SceneManager::Instance()->my_maxInsLocation, offsetCnt);
     glDispatchCompute(offsetCnt / 1024 + 1, 1, 1);
     glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);

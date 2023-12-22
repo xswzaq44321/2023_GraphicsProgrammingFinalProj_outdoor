@@ -55,14 +55,9 @@ void terrainProcess(){
 }
 
 void offsetProcess(){
-// 	mat4 rot = mat4(1.0000000,  0.0000000,  0.0000000, 0.0,
-//    0.0000000,  0.5000000, -0.8660254, 0.0,
-//    0.0000000,  0.8660254,  0.5000000, 0.0,
-//    0.0, 0.0, 0.0, 1.0
-//    );
 	vec3 rotatedVer = (v_rotation * vec4(v_vertex, 1.0)).xyz;
-	vec4 worldVertex = modelMat * vec4(rotatedVer + v_offset, 1.0);
-	vec4 worldNormal = modelMat * v_rotation * vec4(v_normal, 0.0) ;
+	vec4 worldVertex = vec4(rotatedVer + v_offset, 1.0);
+	vec4 worldNormal = v_rotation * vec4(v_normal, 0.0) ;
 
 	vec4 viewVertex = viewMat * worldVertex ;
 	vec4 viewNormal = viewMat * worldNormal ;

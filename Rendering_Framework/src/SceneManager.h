@@ -33,7 +33,13 @@ public:
 	GLuint m_projMatHandle;
 	GLuint m_terrainVToUVMatHandle;
 
+    // compute shader locations
+    unsigned int my_viewProjMatLocation;
     unsigned int my_maxInsLocation;
+
+    unsigned int my_instanceBind;
+    unsigned int my_validBind;
+    unsigned int my_drawCmdBind;
 
 	GLuint m_albedoMapHandle;
 	GLuint m_normalMapHandle;
