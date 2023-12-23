@@ -77,5 +77,6 @@ public:
     int my_fs_texturePass;
     int my_fs_stonePass;
     int my_fs_texArrPass;
+	int my_fs_planePass;
 };
 

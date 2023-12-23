@@ -167,6 +167,7 @@ bool SceneRenderer::setUpShader(){
     manager->my_fs_texturePass = 9;
     manager->my_fs_stonePass = 10;
     manager->my_fs_texArrPass = 11;
+	manager->my_fs_planePass = 12;
 	
 	return true;
 }

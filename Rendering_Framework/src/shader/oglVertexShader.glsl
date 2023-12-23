@@ -8,6 +8,14 @@ layout(location=3) in uint v_offsetIdx;
 out vec3 f_viewVertex ;
 out vec3 f_uv ;
 
+out VS_OUT{
+	vec3 N;
+	vec3 L;
+	vec3 V;
+} vs_out;
+
+out mat4 f_viewMat;
+
 layout(location = 0) uniform mat4 modelMat ;
 layout(location = 5) uniform sampler2D elevationMap ;
 layout(location = 6) uniform sampler2D normalMap ;
@@ -26,13 +34,15 @@ layout(std430, binding = 1) buffer InstanceData {
     InstanceProperties instanceProps[];
 };
 
+vec4 viewVertex;
+vec4 viewNormal;
 
 void commonProcess(){
 	vec4 worldVertex = modelMat * vec4(v_vertex, 1.0) ;
 	vec4 worldNormal = modelMat * vec4(v_normal, 0.0) ;
 
-	vec4 viewVertex = viewMat * worldVertex ;
-	vec4 viewNormal = viewMat * worldNormal ;
+	viewVertex = viewMat * worldVertex ;
+	viewNormal = viewMat * worldNormal ;
 	
 	f_viewVertex = viewVertex.xyz;
 	f_uv = v_uv ;
@@ -54,8 +64,8 @@ void terrainProcess(){
 	normalTex = normalTex * 2.0 - 1.0 ;
 		
 	// transformation	
-	vec4 viewVertex = viewMat * worldV ;
-	vec4 viewNormal = viewMat * vec4(normalTex.rgb, 0) ;	
+	viewVertex = viewMat * worldV ;
+	viewNormal = viewMat * vec4(-normalTex.r, normalTex.g, -normalTex.b, 0) ;	
 	
 	f_viewVertex = viewVertex.xyz;
 	f_uv = uv.xyz ;
@@ -70,8 +80,8 @@ void offsetProcess(){
 	vec4 worldVertex = vec4(rotatedVertex + offset, 1.0);
 	vec4 worldNormal = rotation * vec4(v_normal, 0.0) ;
 
-	vec4 viewVertex = viewMat * worldVertex ;
-	vec4 viewNormal = viewMat * worldNormal ;
+	viewVertex = viewMat * worldVertex ;
+	viewNormal = viewMat * worldNormal ;
 	
 	f_viewVertex = viewVertex.xyz;
 	f_uv = v_uv ;
@@ -80,6 +90,7 @@ void offsetProcess(){
 }
 
 void main(){
+	f_viewMat = viewMat;
 	if(vertexProcessIdx == 0){
 		commonProcess() ;
 	}
@@ -91,5 +102,8 @@ void main(){
 	}
 	else{
 		commonProcess() ;
-	}	
+	}
+	vs_out.N = viewNormal.xyz;
+	vs_out.L = (mat4(viewMat) * vec4(0.4, 0.5, 0.8, 0.0)).xyz;
+	vs_out.V = -viewVertex.xyz;
 }
