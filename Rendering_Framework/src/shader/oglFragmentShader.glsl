@@ -122,14 +122,14 @@ void main(){
 		else if(pixelProcessId == 10){
 			stonePass();
 		}
+		else if(pixelProcessId == 13){
+			stonePassTex();
+		}
 		else if(pixelProcessId == 11){
 			texArrPass();
 		}
 		else if(pixelProcessId == 12){
 			planePass();
-		}
-		else if(pixelProcessId == 13){
-			stonePassTex();
 		}
 		else{
 			pureColor() ;
@@ -141,7 +141,15 @@ void main(){
 		fragColor = normalize(vec4(fs_in.vertex, 1.0)) * 0.5 + 0.5;
 	}
 	if (mode == 2) {
-		fragColor = normalize(vec4(fs_in.normal, 1.0)) * 0.5 + 0.5;
+		if(pixelProcessId == 13){
+			vec3 N = texture(normalMap, f_uv.xy).xyz;
+			// [0, 1] -> [-1, 1]
+			N = N * 2.0 - 1.0 ;
+			N = normalize(mat3(fs_in.TBN) * N);
+			fragColor = normalize(vec4(N, 1.0)) * 0.5 + 0.5;
+		}else{
+			fragColor = normalize(vec4(fs_in.normal, 1.0)) * 0.5 + 0.5;
+		}
 	}
 	if (mode == 3) {
 		fragColor = vec4(texture(albedoTexture, f_uv.xy).xyz, 1.0);
@@ -151,7 +159,7 @@ void main(){
 	}
 	if (mode == 4) {
 		fragColor = vec4(0.0, 0.0, 0.0, 1.0);
-		if (pixelProcessId == 10 || pixelProcessId == 12) {
+		if (pixelProcessId == 10 || pixelProcessId == 12 || pixelProcessId == 13) {
 			fragColor = vec4(1.0);
 		}
 	}
