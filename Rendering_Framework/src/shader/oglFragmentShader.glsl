@@ -7,10 +7,8 @@ in VS_OUT{
 	vec3 N;
 	vec3 L;
 	vec3 V;
+	mat3 TBN;
 } fs_in;
-
-in mat4 f_viewMat;
-in mat3 f_TBN;
 
 layout (location = 0) out vec4 fragColor ;
 
@@ -86,7 +84,7 @@ void stonePassTex(){
 	vec3 N = texture(normalMap, f_uv.xy).xyz;
 	// [0, 1] -> [-1, 1]
 	N = N * 2.0 - 1.0 ;
-	N = normalize(mat3(f_TBN) * N);
+	N = normalize(mat3(fs_in.TBN) * N);
 	vec3 specular = vec3(1.0, 1.0, 1.0);
 	fragColor = withFog(texel * phong(N, fs_in.L, fs_in.V, 32, specular)); 
 	fragColor.a = 1.0;	
