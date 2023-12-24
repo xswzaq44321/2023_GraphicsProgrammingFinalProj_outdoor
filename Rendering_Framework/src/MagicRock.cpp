@@ -53,7 +53,3 @@ DynamicSceneObject * MagicRock::sceneObject() const
 {
     return my_dynamicSO.get();
 }
-
-void MagicRock::update()
-{
-}

@@ -27,7 +27,6 @@ private:
 	std::vector<DynamicSceneObject*> m_dynamicSOs;
 	TerrainSceneObject* m_terrainSO = nullptr;
     MyIndirectRenderer* my_indirectSO = nullptr;
-	MagicRock* m_magicStone = nullptr;
 
 
 public:
@@ -40,7 +39,6 @@ public:
 	void appendDynamicSceneObject(DynamicSceneObject *obj);
 	void appendTerrainSceneObject(TerrainSceneObject* tSO);
     void appendIndirectSceneObject(MyIndirectRenderer* obj);
-	void appendMagicStoneSceneObject(MagicRock* obj);
 
 // pipeline
 public:

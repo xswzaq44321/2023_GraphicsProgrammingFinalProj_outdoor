@@ -45,9 +45,6 @@ void SceneRenderer::renderPass(){
     if (this->my_indirectSO != nullptr) {
         this->my_indirectSO->render();
     }
-	if (this->m_magicStone != nullptr) {
-		this->m_magicStone->update();
-	}
 	
 }
 
@@ -90,10 +87,6 @@ void SceneRenderer::appendTerrainSceneObject(TerrainSceneObject* tSO) {
 void SceneRenderer::appendIndirectSceneObject(MyIndirectRenderer * obj)
 {
     this->my_indirectSO = obj;
-}
-void SceneRenderer::appendMagicStoneSceneObject(MagicRock * obj)
-{
-	this->m_magicStone = obj;
 }
 void SceneRenderer::clear(const glm::vec4 &clearColor, const float depth){
 	static const float COLOR[] = { 0.0, 0.0, 0.0, 1.0 };
