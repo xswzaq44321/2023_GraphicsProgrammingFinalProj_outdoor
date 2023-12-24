@@ -146,6 +146,7 @@ void vsyncDisabled(GLFWwindow *window) {
 			my_rock->sceneObject()->setPixelFunctionId(SceneManager::Instance()->my_fs_stonePassTex);
 		else
 			my_rock->sceneObject()->setPixelFunctionId(SceneManager::Instance()->my_fs_stonePass);
+        defaultRenderer->setDeferredMode(m_imguiPanel->deferredMode);
 
         glfwPollEvents();
         paintGL();

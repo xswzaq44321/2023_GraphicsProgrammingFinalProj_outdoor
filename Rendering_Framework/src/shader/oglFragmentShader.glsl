@@ -8,6 +8,10 @@ in VS_OUT{
 	vec3 L;
 	vec3 V;
 	mat3 TBN;
+	// #NEW
+	vec3 vertex;
+	vec3 normal;
+	//
 } fs_in;
 
 layout (location = 0) out vec4 fragColor ;
@@ -16,6 +20,7 @@ layout(location = 2) uniform int pixelProcessId;
 layout(location = 4) uniform sampler2D albedoTexture ;
 layout(location = 6) uniform sampler2D normalMap ;
 layout(location = 10) uniform sampler2DArray albedoTextureArray;
+layout(location = 11) uniform int mode; // 0 = NONE, 1 = POS, 2 = NORMAL, 3 = DIFFUSE = AMBIENT, 4 = SPECULAR
 
 
 vec4 withFog(vec4 color){
@@ -45,16 +50,17 @@ vec4 phong(vec3 N, vec3 L, vec3 V, int shininess, vec3 S){
 	vec3 ambient = Ia;
 	vec3 diffuse = max(dot(N, L), 0.0) * Id;
 	vec3 specular = pow(max(dot(N, H), 0.0), shininess) * Is * S;
+
 	return vec4(ambient + diffuse + specular, 1.0);
 }
 
-vec4 phong(vec3 N, vec3 L, vec3 V){
+vec4 phong(vec3 N, vec3 L, vec3 V) {
 	return phong(N, L, V, 1, vec3(0.0, 0.0, 0.0));
 }
 
 void terrainPass(){
 	vec4 texel = texture(albedoTexture, f_uv.xy) ;
-	fragColor = withFog(texel * phong(fs_in.N, fs_in.L, fs_in.V));
+	fragColor = withFog(texel * phong(fs_in.N, fs_in.L, fs_in.V)); 
 	fragColor.a = 1.0;
 }
 
@@ -102,30 +108,52 @@ void texArrPass(){
 	fragColor.a = 1.0;	
 }
 
-void main(){	
-	if(pixelProcessId == 5){
-		pureColor() ;
+void main(){
+	if (mode == 0){
+		if(pixelProcessId == 5){
+			pureColor() ;
+		}
+		else if(pixelProcessId == 7){
+			terrainPass() ;
+		}
+		else if(pixelProcessId == 9){
+			texturePass();
+		}
+		else if(pixelProcessId == 10){
+			stonePass();
+		}
+		else if(pixelProcessId == 11){
+			texArrPass();
+		}
+		else if(pixelProcessId == 12){
+			planePass();
+		}
+		else if(pixelProcessId == 13){
+			stonePassTex();
+		}
+		else{
+			pureColor() ;
+		}
+		fragColor.rgb = pow(fragColor.rgb, vec3(0.5));
 	}
-	else if(pixelProcessId == 7){
-		terrainPass() ;
+	// #NEW
+	if (mode == 1) {
+		fragColor = normalize(vec4(fs_in.vertex, 1.0)) * 0.5 + 0.5;
 	}
-	else if(pixelProcessId == 9){
-		texturePass();
+	if (mode == 2) {
+		fragColor = normalize(vec4(fs_in.normal, 1.0)) * 0.5 + 0.5;
 	}
-	else if(pixelProcessId == 10){
-		stonePass();
+	if (mode == 3) {
+		fragColor = vec4(texture(albedoTexture, f_uv.xy).xyz, 1.0);
+		if (pixelProcessId == 11) {
+			fragColor = vec4(texture(albedoTextureArray, f_uv).xyz, 1.0);
+		}
 	}
-	else if(pixelProcessId == 11){
-		texArrPass();
+	if (mode == 4) {
+		fragColor = vec4(0.0, 0.0, 0.0, 1.0);
+		if (pixelProcessId == 10 || pixelProcessId == 12) {
+			fragColor = vec4(1.0);
+		}
 	}
-	else if(pixelProcessId == 12){
-		planePass();
-	}
-	else if(pixelProcessId == 13){
-		stonePassTex();
-	}
-	else{
-		pureColor() ;
-	}
-	fragColor.rgb = pow(fragColor.rgb, vec3(0.5));
+	//
 }

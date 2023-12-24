@@ -20,6 +20,7 @@ public:
     bool Teleport[3] = {};
 
 	bool StoneNormalMap = false;
+    int deferredMode = 0;
 
 private:
 	double m_avgFPS;

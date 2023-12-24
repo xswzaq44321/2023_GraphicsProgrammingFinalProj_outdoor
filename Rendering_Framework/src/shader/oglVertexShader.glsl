@@ -15,6 +15,10 @@ out VS_OUT{
 	vec3 L;
 	vec3 V;
 	mat3 TBN;
+	// #NEW
+	vec3 vertex;
+	vec3 normal;
+	//
 } vs_out;
 
 layout(location = 0) uniform mat4 modelMat ;
@@ -54,6 +58,10 @@ void commonProcess(){
 	vs_out.TBN = mat3(viewMat) * mat3(T, B, N);
 
 	gl_Position = projMat * viewVertex ;
+	// #NEW
+	vs_out.vertex = worldVertex.xyz;
+	vs_out.normal = worldNormal.xyz;
+	//
 }
 
 void terrainProcess(){
@@ -77,6 +85,10 @@ void terrainProcess(){
 	f_uv = uv.xyz ;
 
 	gl_Position = projMat * viewVertex ;
+	// #NEW
+	vs_out.vertex = worldV.xyz;
+	vs_out.normal = normalTex.xyz;
+	//
 }
 
 void offsetProcess(){
@@ -93,6 +105,10 @@ void offsetProcess(){
 	f_uv = v_uv ;
 
 	gl_Position = projMat * viewVertex ;
+	// #NEW
+	vs_out.vertex = worldVertex.xyz;
+	vs_out.normal = worldNormal.xyz;
+	//
 }
 
 void main(){

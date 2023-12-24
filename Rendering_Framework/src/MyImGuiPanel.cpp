@@ -27,6 +27,16 @@ void MyImGuiPanel::update() {
 		Teleport[2] = true;
 	if (ImGui::Button("toggle magic stone normal map"))
 		StoneNormalMap = !StoneNormalMap;
+    if (ImGui::Button("mode none"))
+        deferredMode = 0;
+    if (ImGui::Button("mode world space vertex"))
+        deferredMode = 1;
+    if (ImGui::Button("mode world space normal"))
+        deferredMode = 2;
+    if (ImGui::Button("mode ambient/diffuse"))
+        deferredMode = 3;
+    if (ImGui::Button("mode specular"))
+        deferredMode = 4;
 }
 
 void MyImGuiPanel::setAvgFPS(const double avgFPS){

@@ -28,6 +28,7 @@ public:
     unsigned int my_offsetHandle;
 	unsigned int my_tangentHandle;
 	unsigned int my_bitangentHandle;
+    unsigned int my_deferredModeHandle;
 
 	GLuint m_modelMatHandle;
 	GLuint m_viewMatHandle;

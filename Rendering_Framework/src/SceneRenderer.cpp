@@ -30,6 +30,7 @@ void SceneRenderer::renderPass(){
     this->m_shaderProgram->useProgram();
 	glUniformMatrix4fv(manager->m_projMatHandle, 1, false, glm::value_ptr(this->m_projMat));
 	glUniformMatrix4fv(manager->m_viewMatHandle, 1, false, glm::value_ptr(this->m_viewMat));
+    glUniform1i(manager->my_deferredModeHandle, this->my_defferedMode);
 
 	if (this->m_terrainSO != nullptr) {
 		glUniform1i(SceneManager::Instance()->m_vs_vertexProcessIdHandle, SceneManager::Instance()->m_vs_terrainProcess);
@@ -118,6 +119,7 @@ bool SceneRenderer::setUpShader(){
 	manager->m_viewMatHandle = 7;
 	manager->m_projMatHandle = 8;
 	manager->m_terrainVToUVMatHandle = 9;
+    manager->my_deferredModeHandle = 11;
 
     // compute shader attributes
     manager->my_viewProjMatLocation = 0;
