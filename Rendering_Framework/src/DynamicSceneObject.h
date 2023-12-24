@@ -22,13 +22,14 @@ private:
 	int m_pixelFunctionId;
 	int m_vertexFunctionId;
 	int m_indexCount;
+	int strideV;
     std::optional<GLuint> my_albedoMapHandle;
     std::optional<GLuint> my_normalMapHandle;
 
 	glm::mat4 m_modelMat;
 
 public:
-	DynamicSceneObject(const int maxNumVertex, const int maxNumIndex, const bool normalFlag, const bool uvFlag);
+	DynamicSceneObject(const int maxNumVertex, const int maxNumIndex, const bool normalFlag, const bool uvFlag, const bool tangentAndBitangent = false);
 	virtual ~DynamicSceneObject();
 
 	void update();
@@ -45,5 +46,7 @@ public:
 	void setModelMat(const glm::mat4& modelMat);
     void setAlbedoTex(GLuint albedoHandle);
     void setNormalTex(GLuint normalHandle);
+
+	int getStrideV() { return strideV; };
 };
 

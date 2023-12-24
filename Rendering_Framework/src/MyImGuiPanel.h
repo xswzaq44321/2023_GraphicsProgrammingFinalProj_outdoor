@@ -19,6 +19,8 @@ public:
 
     bool Teleport[3] = {};
 
+	bool StoneNormalMap = false;
+
 private:
 	double m_avgFPS;
 	double m_avgFrameTime;

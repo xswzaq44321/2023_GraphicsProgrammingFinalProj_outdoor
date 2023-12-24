@@ -3,13 +3,13 @@
 MagicRock::MagicRock() {
     MyMesh mesh = ProxyLoad(3).MyLoadObj("assets/MagicRock/magicRock.obj").at(0);
     int numVertex = mesh.positions.size() / 3;
-    int strideV = 9;
-    my_dynamicSO = std::make_unique<DynamicSceneObject>(numVertex, mesh.indices.size(), true, true);
+    my_dynamicSO = std::make_unique<DynamicSceneObject>(numVertex, mesh.indices.size(), true, true, true);
+	int strideV = my_dynamicSO->getStrideV();
 
     float* dataBuffer = my_dynamicSO->dataBuffer();
     for (int i = 0; i < numVertex; ++i) {
         for (int j = 0; j < 3; ++j) {
-            dataBuffer[i * strideV + j] = mesh.positions.at(i * 3 + j);
+            dataBuffer[i * strideV + 0 + j] = mesh.positions.at(i * 3 + j);
         }
         for (int j = 0; j < 3; ++j) {
             dataBuffer[i * strideV + 3 + j] = mesh.normals.at(i * 3 + j);
@@ -17,6 +17,12 @@ MagicRock::MagicRock() {
         for (int j = 0; j < 3; ++j) {
             dataBuffer[i * strideV + 6 + j] = mesh.texcoords.at(i * 3 + j);
         }
+		for (int j = 0; j < 3; ++j) {
+			dataBuffer[i * strideV + 9 + j] = mesh.tangent.at(i * 3 + j);
+		}
+		for (int j = 0; j < 3; ++j) {
+			dataBuffer[i * strideV + 12 + j] = mesh.biTangent.at(i * 3 + j);
+		}
     }
     my_dynamicSO->updateDataBuffer(0, numVertex * strideV * sizeof(float));
 
@@ -46,4 +52,8 @@ MagicRock::MagicRock() {
 DynamicSceneObject * MagicRock::sceneObject() const
 {
     return my_dynamicSO.get();
+}
+
+void MagicRock::update()
+{
 }

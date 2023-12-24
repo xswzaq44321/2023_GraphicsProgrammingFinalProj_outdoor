@@ -10,6 +10,7 @@ in VS_OUT{
 } fs_in;
 
 in mat4 f_viewMat;
+in mat3 f_TBN;
 
 layout (location = 0) out vec4 fragColor ;
 
@@ -75,10 +76,17 @@ void planePass(){
 
 void stonePass(){
 	vec4 texel = texture(albedoTexture, f_uv.xy);
+	vec3 specular = vec3(1.0, 1.0, 1.0);
+	fragColor = withFog(texel * phong(fs_in.N, fs_in.L, fs_in.V, 32, specular)); 
+	fragColor.a = 1.0;	
+}
+
+void stonePassTex(){
+	vec4 texel = texture(albedoTexture, f_uv.xy);
 	vec3 N = texture(normalMap, f_uv.xy).xyz;
 	// [0, 1] -> [-1, 1]
 	N = N * 2.0 - 1.0 ;
-	N = mat3(f_viewMat) * N;
+	N = normalize(mat3(f_TBN) * N);
 	vec3 specular = vec3(1.0, 1.0, 1.0);
 	fragColor = withFog(texel * phong(N, fs_in.L, fs_in.V, 32, specular)); 
 	fragColor.a = 1.0;	
@@ -111,6 +119,9 @@ void main(){
 	}
 	else if(pixelProcessId == 12){
 		planePass();
+	}
+	else if(pixelProcessId == 13){
+		stonePassTex();
 	}
 	else{
 		pureColor() ;

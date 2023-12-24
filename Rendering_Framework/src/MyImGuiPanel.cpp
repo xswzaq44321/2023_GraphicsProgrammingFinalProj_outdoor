@@ -23,8 +23,10 @@ void MyImGuiPanel::update() {
         Teleport[0] = true;
     if (ImGui::Button("Teleport 1"))
         Teleport[1] = true;
-    if (ImGui::Button("Teleport 2"))
-        Teleport[2] = true;
+	if (ImGui::Button("Teleport 2"))
+		Teleport[2] = true;
+	if (ImGui::Button("toggle magic stone normal map"))
+		StoneNormalMap = !StoneNormalMap;
 }
 
 void MyImGuiPanel::setAvgFPS(const double avgFPS){

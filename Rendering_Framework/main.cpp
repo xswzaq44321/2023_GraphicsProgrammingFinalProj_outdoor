@@ -142,6 +142,10 @@ void vsyncDisabled(GLFWwindow *window) {
                 printf("Teleport %d\n", i);
             }
         }
+		if (m_imguiPanel->StoneNormalMap)
+			my_rock->sceneObject()->setPixelFunctionId(SceneManager::Instance()->my_fs_stonePassTex);
+		else
+			my_rock->sceneObject()->setPixelFunctionId(SceneManager::Instance()->my_fs_stonePass);
 
         glfwPollEvents();
         paintGL();
@@ -233,6 +237,7 @@ bool initializeGL() {
 
     // initialize Magic Rock
     my_rock = std::make_unique<MagicRock>();
+	//defaultRenderer->appendMagicStoneSceneObject(my_rock.get());
     defaultRenderer->appendDynamicSceneObject(my_rock->sceneObject());
 
     // initialize Indirect

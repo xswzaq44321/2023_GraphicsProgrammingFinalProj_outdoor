@@ -25,12 +25,12 @@ GLuint DynamicSceneObject::createTexture(const void * data, const int numComp, c
     return texHandle;
 }
 
-DynamicSceneObject::DynamicSceneObject(const int maxNumVertex, const int maxNumIndex, const bool normalFlag, const bool uvFlag)
+DynamicSceneObject::DynamicSceneObject(const int maxNumVertex, const int maxNumIndex, const bool normalFlag, const bool uvFlag, const bool tangentAndBitangent)
 {
     // the data should be INTERLEAF format
 
     int totalBufferDataByte = maxNumVertex * 12;
-    int strideV = 3;
+    strideV = 3;
     if (normalFlag == true) {
         totalBufferDataByte += maxNumVertex * 12;
         strideV += 3;
@@ -39,6 +39,12 @@ DynamicSceneObject::DynamicSceneObject(const int maxNumVertex, const int maxNumI
         totalBufferDataByte += maxNumVertex * 12;
         strideV += 3;
     }
+	if (tangentAndBitangent) {
+		totalBufferDataByte += maxNumVertex * 12;
+		strideV += 3;
+		totalBufferDataByte += maxNumVertex * 12;
+		strideV += 3;
+	}
 
     this->m_indexCount = maxNumIndex;
 
@@ -71,6 +77,14 @@ DynamicSceneObject::DynamicSceneObject(const int maxNumVertex, const int maxNumI
         byteOffset = byteOffset + 12;
         glEnableVertexAttribArray(SceneManager::Instance()->m_uvHandle);
     }
+	if (tangentAndBitangent) {
+		glVertexAttribPointer(SceneManager::Instance()->my_tangentHandle, 3, GL_FLOAT, false, strideV * 4, (void*)(byteOffset));
+		byteOffset = byteOffset + 12;
+		glEnableVertexAttribArray(SceneManager::Instance()->my_tangentHandle);
+		glVertexAttribPointer(SceneManager::Instance()->my_bitangentHandle, 3, GL_FLOAT, false, strideV * 4, (void*)(byteOffset));
+		byteOffset = byteOffset + 12;
+		glEnableVertexAttribArray(SceneManager::Instance()->my_bitangentHandle);
+	}
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexBufferHandle);
     glBindVertexArray(0);
 }

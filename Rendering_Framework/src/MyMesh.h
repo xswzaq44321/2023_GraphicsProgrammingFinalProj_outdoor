@@ -25,6 +25,7 @@ struct MyMesh
     std::vector<float> normals;
     std::vector<unsigned int> indices;
     std::vector<std::shared_ptr<MyTexture>> diffuseTexture, normalTexture;
+	std::vector<float> tangent, biTangent;
 };
 
 class ProxyLoad {

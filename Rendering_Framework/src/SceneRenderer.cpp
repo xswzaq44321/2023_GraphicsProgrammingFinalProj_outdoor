@@ -42,10 +42,12 @@ void SceneRenderer::renderPass(){
 			obj->update();
 		}
 	}
-
     if (this->my_indirectSO != nullptr) {
         this->my_indirectSO->render();
     }
+	if (this->m_magicStone != nullptr) {
+		this->m_magicStone->update();
+	}
 	
 }
 
@@ -89,6 +91,10 @@ void SceneRenderer::appendIndirectSceneObject(MyIndirectRenderer * obj)
 {
     this->my_indirectSO = obj;
 }
+void SceneRenderer::appendMagicStoneSceneObject(MagicRock * obj)
+{
+	this->m_magicStone = obj;
+}
 void SceneRenderer::clear(const glm::vec4 &clearColor, const float depth){
 	static const float COLOR[] = { 0.0, 0.0, 0.0, 1.0 };
 	static const float DEPTH[] = { 1.0 };
@@ -111,7 +117,8 @@ bool SceneRenderer::setUpShader(){
 	manager->m_normalHandle = 1;
 	manager->m_uvHandle = 2;
     manager->my_offsetHandle = 3;
-    manager->my_rotationHandle = 4;
+    manager->my_tangentHandle = 4;
+	manager->my_bitangentHandle = 5;
 
 	// =================================
 	manager->m_modelMatHandle = 0;
@@ -166,6 +173,7 @@ bool SceneRenderer::setUpShader(){
 	manager->m_fs_terrainPass = 7;
     manager->my_fs_texturePass = 9;
     manager->my_fs_stonePass = 10;
+	manager->my_fs_stonePassTex = 13;
     manager->my_fs_texArrPass = 11;
 	manager->my_fs_planePass = 12;
 	

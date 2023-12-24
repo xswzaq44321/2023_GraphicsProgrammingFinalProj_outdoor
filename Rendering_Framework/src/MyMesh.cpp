@@ -13,7 +13,7 @@ ProxyLoad::ProxyLoad(int texcoordSize) :
 std::vector<MyMesh> ProxyLoad::MyLoadObj(const std::string & filePath, const std::string& textureDir)
 {
     Assimp::Importer importer;
-    const aiScene* sceneObjPtr = importer.ReadFile(filePath, aiProcess_Triangulate | aiProcess_GenSmoothNormals);
+    const aiScene* sceneObjPtr = importer.ReadFile(filePath, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_CalcTangentSpace);
     if (!sceneObjPtr) {
         fprintf(stderr, "Error: Model::loadModel, description: %s\n", importer.GetErrorString());
     }
@@ -67,6 +67,14 @@ MyMesh ProxyLoad::processMesh(const aiMesh * mesh, const aiScene * scene)
             rtv.normals.push_back(mesh->mNormals[i].y);
             rtv.normals.push_back(mesh->mNormals[i].z);
         }
+		if (mesh->HasTangentsAndBitangents()) {
+			rtv.tangent.push_back(mesh->mTangents[i].x);
+			rtv.tangent.push_back(mesh->mTangents[i].y);
+			rtv.tangent.push_back(mesh->mTangents[i].z);
+			rtv.biTangent.push_back(mesh->mBitangents[i].x);
+			rtv.biTangent.push_back(mesh->mBitangents[i].y);
+			rtv.biTangent.push_back(mesh->mBitangents[i].z);
+		}
     }
     for (int i = 0; i < mesh->mNumFaces; ++i) {
         aiFace& face = mesh->mFaces[i];

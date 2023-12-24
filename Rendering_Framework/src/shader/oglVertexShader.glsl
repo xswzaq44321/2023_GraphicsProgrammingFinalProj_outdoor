@@ -4,6 +4,8 @@ layout(location=0) in vec3 v_vertex;
 layout(location=1) in vec3 v_normal ;
 layout(location=2) in vec3 v_uv ;
 layout(location=3) in uint v_offsetIdx;
+layout(location=4) in vec3 v_tangent;
+layout(location=5) in vec3 v_bitangent;
 
 out vec3 f_viewVertex ;
 out vec3 f_uv ;
@@ -15,6 +17,7 @@ out VS_OUT{
 } vs_out;
 
 out mat4 f_viewMat;
+out mat3 f_TBN;
 
 layout(location = 0) uniform mat4 modelMat ;
 layout(location = 5) uniform sampler2D elevationMap ;
@@ -46,6 +49,11 @@ void commonProcess(){
 	
 	f_viewVertex = viewVertex.xyz;
 	f_uv = v_uv ;
+
+	vec3 T = normalize(vec3(modelMat * vec4(v_tangent, 0.0)));
+	vec3 B = normalize(vec3(modelMat * vec4(v_bitangent, 0.0)));
+	vec3 N = normalize(vec3(modelMat * vec4(v_normal, 0.0)));
+	f_TBN = mat3(T, B, N);
 
 	gl_Position = projMat * viewVertex ;
 }

@@ -26,7 +26,8 @@ public:
 	GLuint m_normalHandle;
 	GLuint m_uvHandle;
     unsigned int my_offsetHandle;
-    unsigned int my_rotationHandle;
+	unsigned int my_tangentHandle;
+	unsigned int my_bitangentHandle;
 
 	GLuint m_modelMatHandle;
 	GLuint m_viewMatHandle;
@@ -75,7 +76,8 @@ public:
 	int m_fs_pureColor;	
 	int m_fs_terrainPass;
     int my_fs_texturePass;
-    int my_fs_stonePass;
+	int my_fs_stonePass;
+	int my_fs_stonePassTex;
     int my_fs_texArrPass;
 	int my_fs_planePass;
 };
