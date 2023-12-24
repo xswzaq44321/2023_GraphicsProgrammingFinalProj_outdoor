@@ -32,7 +32,7 @@ vec4 withFog(vec4 color){
 	return colorWithFog ;
 }
 
-vec4 phong(vec3 N, vec3 L, vec3 V, int shininess = 1, vec3 S = vec3(0.0, 0.0, 0.0)){
+vec4 phong(vec3 N, vec3 L, vec3 V, int shininess, vec3 S){
 	vec3 Ia = vec3(0.2, 0.2, 0.2);
 	vec3 Id = vec3(0.64, 0.64, 0.64);
 	vec3 Is = vec3(0.16, 0.16, 0.16);
@@ -48,10 +48,13 @@ vec4 phong(vec3 N, vec3 L, vec3 V, int shininess = 1, vec3 S = vec3(0.0, 0.0, 0.
 	return vec4(ambient + diffuse + specular, 1.0);
 }
 
+vec4 phong(vec3 N, vec3 L, vec3 V){
+	return phong(N, L, V, 1, vec3(0.0, 0.0, 0.0));
+}
+
 void terrainPass(){
 	vec4 texel = texture(albedoTexture, f_uv.xy) ;
-	fragColor = withFog(texel * phong(fs_in.N, fs_in.L, fs_in.V)); 
-	// fragColor = vec4((normalize(fs_in.N) + 1.0) / 2.0, 0.0);
+	fragColor = withFog(texel * phong(fs_in.N, fs_in.L, fs_in.V));
 	fragColor.a = 1.0;
 }
 
